@@ -1,17 +1,23 @@
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.yandex.qatools.htmlelements.annotations.Name;
-import ru.yandex.qatools.htmlelements.element.HtmlElement;
+import ru.yandex.qatools.htmlelements.element.Button;
 import ru.yandex.qatools.htmlelements.element.TextInput;
 import ru.yandex.qatools.htmlelements.loader.HtmlElementLoader;
 
 public class MainPageIua {
 
     private WebDriver driver;
+    private String mainURI = "http://i.ua";
+
+    public String getMainURI() {
+        return mainURI;
+    }
+
+    public void setMainURI(String mainURI) {
+        this.mainURI = mainURI;
+    }
+
 
     public MainPageIua(WebDriver driver){
         HtmlElementLoader.populatePageObject(this, driver);
@@ -41,17 +47,19 @@ public class MainPageIua {
     public String getPasswordValue() { return passwordField.getEnteredText();
     }
 
+    @Name("Submit Login Form Button")
+    @FindBy(xpath = "//form[@name='lform']//input[@type='submit']")
+    private Button submitLoginForm;
 
-    public void doSearch(String query){
-
-        Actions action = new Actions(driver);
-        action.keyDown(Keys.CONTROL).sendKeys("A").keyUp(Keys.CONTROL)
-                .build().perform();
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+    public void clickSubmitLoginForm() {
+        submitLoginForm.click();
     }
+
+    public void enterToEmailPage(String login, String password) {
+        fillingLoginField(login);
+        fillingPasswordField(password);
+        clickSubmitLoginForm();
+    }
+
+
 }
