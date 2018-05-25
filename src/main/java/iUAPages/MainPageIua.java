@@ -1,3 +1,6 @@
+package iUAPages;
+
+import iUAPages.emailPage.EmailPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
 import ru.yandex.qatools.htmlelements.annotations.Name;
@@ -25,7 +28,7 @@ public class MainPageIua {
     }
 
     @Name("Login Field")
-    @FindBy(xpath = "//*[@name='login']")
+    @FindBy(name = "login")
     private TextInput loginField;
 
     public void fillingLoginField(String login) {
@@ -55,10 +58,11 @@ public class MainPageIua {
         submitLoginForm.click();
     }
 
-    public void enterToEmailPage(String login, String password) {
+    public EmailPage enterToEmailPage(String login, String password) {
         fillingLoginField(login);
         fillingPasswordField(password);
         clickSubmitLoginForm();
+        return new EmailPage(driver);
     }
 
 

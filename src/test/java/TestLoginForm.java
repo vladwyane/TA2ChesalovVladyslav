@@ -1,4 +1,11 @@
+import iUAPages.LoginPage;
+import iUAPages.MainPageIua;
+import iUAPages.emailPage.EmailPage;
+import iUAPages.emailPage.emaiPageLinks.CreateLetterPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import mailinatorPage.InboxPage;
+import mailinatorPage.IndexMailinatorPage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Reporter;
@@ -25,6 +32,7 @@ public class TestLoginForm {
     public void setupTest() {
         driver = new ChromeDriver();
         driver.manage().timeouts().pageLoadTimeout(300, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         driver.manage().deleteAllCookies();
         softAssert = new SoftAssert();
         mainPageIua = new MainPageIua(driver);
@@ -42,28 +50,42 @@ public class TestLoginForm {
 
     @Test
     public void testCorrectEnterToEmail() {
-        MainPageIua mainPageIua = new MainPageIua(driver);
-        mainPageIua.enterToEmailPage("vladyslav.chesalov", "rdf49dw23");
-        EmailPage emailPage = new EmailPage(driver);
+        EmailPage emailPage = mainPageIua.enterToEmailPage("vladyslav.chesalov", "rdf49dw23");
         softAssert.assertEquals(emailPage.getEmailTitleValue(), "vladyslav.chesalov@i.ua");
+        softAssert.assertNotNull(emailPage);
         softAssert.assertAll();
     }
 
     @Test
     public void testInvalidLoginValue() {
-        MainPageIua mainPageIua = new MainPageIua(driver);
-        mainPageIua.enterToEmailPage("error", "rdf49dw23");
+        EmailPage emailPage = mainPageIua.enterToEmailPage("error", "rdf49dw23");
         LoginPage loginPage = new LoginPage(driver);
         softAssert.assertEquals(loginPage.getErrorMessageValue(), "Неверный логин или пароль");
+        softAssert.assertNotNull(emailPage);
         softAssert.assertAll();
     }
 
     @Test
-    public void testInvalidPasswordValue() {
-        MainPageIua mainPageIua = new MainPageIua(driver);
-        mainPageIua.enterToEmailPage("vladyslav.chesalov", "error");
-        LoginPage loginPage = new LoginPage(driver);
-        softAssert.assertEquals(loginPage.getErrorMessageValue(), "Неверный логин или пароль");
+    public void testCorrectSendLetter() throws InterruptedException {
+        //EmailPage emailPage = mainPageIua.enterToEmailPage("vladyslav.chesalov", "rdf49dw23");
+        //emailPage.clickLinkCreateLetter();
+        //CreateLetterPage createLetterPage = new CreateLetterPage(driver);
+       // createLetterPage.sendLetter("vladyslav.chesalov@mailinator.com", "theme", "body");
+        IndexMailinatorPage indexMailinatorPage = new IndexMailinatorPage(driver);
+        driver.get( indexMailinatorPage.getMailinatorURI());
+        indexMailinatorPage.fillingCheckInboxField("vladyslav.chesalov");
+        indexMailinatorPage.clickGoButton();
+        InboxPage inboxPage = new InboxPage(driver);
+        softAssert.assertEquals(inboxPage.getTitleFromValue(), "Владислав1");
+        inboxPage.clickTitleFrom();
+        driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@id='msg_body']")));
+
+        //Thread.sleep(5000);
+
+        softAssert.assertEquals(inboxPage.getThemeTitleValue(), "Владислав2");
+        softAssert.assertEquals(driver.findElement(By.tagName("body")).getText(), "Владислав3");
+
         softAssert.assertAll();
     }
+
 }
