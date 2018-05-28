@@ -5,7 +5,6 @@ import iUAPages.emailPage.emaiPageLinks.CreateLetterPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import mailinatorPage.InboxPage;
 import mailinatorPage.IndexMailinatorPage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Reporter;
@@ -16,7 +15,7 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import java.util.concurrent.TimeUnit;
 
-public class TestLoginForm {
+public class TestMailAccountIua {
 
     private WebDriver driver;
     private SoftAssert softAssert;
