@@ -67,25 +67,19 @@ public class TestLoginForm {
 
     @Test
     public void testCorrectSendLetter() throws InterruptedException {
-        //EmailPage emailPage = mainPageIua.enterToEmailPage("vladyslav.chesalov", "rdf49dw23");
-        //emailPage.clickLinkCreateLetter();
-        //CreateLetterPage createLetterPage = new CreateLetterPage(driver);
-       // createLetterPage.sendLetter("vladyslav.chesalov@mailinator.com", "theme", "body");
+        EmailPage emailPage = mainPageIua.enterToEmailPage("vladyslav.chesalov", "rdf49dw23");
+        emailPage.clickLinkCreateLetter();
+        CreateLetterPage createLetterPage = new CreateLetterPage(driver);
+        createLetterPage.sendLetter("vladyslav.chesalov@mailinator.com", "theme", "body new content");
         IndexMailinatorPage indexMailinatorPage = new IndexMailinatorPage(driver);
         driver.get( indexMailinatorPage.getMailinatorURI());
-        indexMailinatorPage.fillingCheckInboxField("vladyslav.chesalov");
-        indexMailinatorPage.clickGoButton();
-        InboxPage inboxPage = new InboxPage(driver);
-        softAssert.assertEquals(inboxPage.getTitleFromValue(), "Владислав1");
+        InboxPage inboxPage = indexMailinatorPage.enterToInboxPage("vladyslav.chesalov");;
+        softAssert.assertEquals(inboxPage.getTitleFromValue(), "Владислав");
         inboxPage.clickTitleFrom();
-        driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@id='msg_body']")));
-
-        //Thread.sleep(5000);
-
-        softAssert.assertEquals(inboxPage.getThemeTitleValue(), "Владислав2");
-        softAssert.assertEquals(driver.findElement(By.tagName("body")).getText(), "Владислав3");
-
+        //Waiting appears frame
+        Thread.sleep(2000);
+        softAssert.assertEquals(inboxPage.getThemeTitleValue(), "theme");
+        softAssert.assertEquals(inboxPage.getIframeBodyValue(driver), "body new content");
         softAssert.assertAll();
     }
-
 }

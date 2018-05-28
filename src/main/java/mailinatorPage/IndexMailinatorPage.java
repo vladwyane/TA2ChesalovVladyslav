@@ -44,4 +44,11 @@ public class IndexMailinatorPage {
     public void clickGoButton() {
         goButton.click();
     }
+
+    public InboxPage enterToInboxPage(String login) {
+        fillingCheckInboxField(login);
+        clickGoButton();
+        return new InboxPage(driver);
+    }
+
 }

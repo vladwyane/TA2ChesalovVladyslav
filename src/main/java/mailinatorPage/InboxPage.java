@@ -1,6 +1,7 @@
 package mailinatorPage;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import ru.yandex.qatools.htmlelements.annotations.Name;
 import ru.yandex.qatools.htmlelements.element.HtmlElement;
@@ -31,4 +32,16 @@ public class InboxPage extends IndexMailinatorPage {
         return themeTitle.getText();
     }
 
+    @Name("Iframe Message")
+    @FindBy(xpath = "//iframe[@id='msg_body']")
+    private HtmlElement iframe;
+
+    @Name("Iframe body")
+    @FindBy(tagName = "body")
+    private HtmlElement iframeBody;
+
+    public String getIframeBodyValue(WebDriver driver) {
+        driver.switchTo().frame(iframe);
+        return iframeBody.getText();
+    }
 }
